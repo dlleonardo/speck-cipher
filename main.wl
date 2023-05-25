@@ -1,4 +1,3 @@
-
 SetRoundsNumber[block_, key_] := Module[{rounds},
     joinedBlock = StringJoin[block];
     joinedKey = StringJoin[key];
