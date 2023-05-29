@@ -6,47 +6,39 @@ RotateBitToTheLeft[n_, p_, s_] := BitOr[BitAnd[BitShiftLeft[n,p], 2^s - 1], BitS
 ClearAll[RotateBitToTheRight];
 RotateBitToTheRight[n_, p_, s_] := BitOr[BitShiftRight[n, p],BitAnd[ BitShiftLeft[n, s - p], 2^s - 1] ]
 
-(* Test on RoundFunction using Speck 96/96 *)
+(* RoundFunction, the core of Speck cipher *)
 ClearAll[RoundFunction];
-RoundFunction[pt1_, pt2_, k_] := Module[{listOutput},
-    i1 = FromDigits[Part[pt1, 1], 16];
-    i2 = FromDigits[Part[pt2, 1], 16];
-    i3 = FromDigits[Part[k, 1], 16];
-    
-    lenPt1 = 48;
-    lenPt2 = 48;
-    (* Ruoto di 8 bit a destra il primo input *)
-    rotPt1 = RotateBitToTheRight[i1, 8, lenPt1];
-    (* Modulo 16 della somma fra il risultato della rotazione precedente e il secondo input *)
-    sumInt =rotPt1 + i2;
-    sumStr = BitAnd[Mod[sumInt, 48], 2^lenPt1 - 1];
-    (*sumStr = BitAnd[BitXor[rotPt1, i2], lenPt1 - 1];*)
-    (* Ruoto di 3 bit a sinistra il secondo input *)
-    rotPt2 = RotateBitToTheLeft[i2, 3, lenPt2];
-    (* Or esclusivo fra il risultato del Modulo 16 precedente e il terzo input *)
-    output1 = IntegerString[BitXor[sumStr, i3 ], 16];
-    (* Or esclusivo fra il risultato dell'or esclusivo precedente e il risultato della rotazione a sinistra del secondo input *)
-    output2 = IntegerString[BitXor[FromDigits[output1, 16], rotPt2 ], 16];
-    listOutput = List[output1, output2];
-    Return[listOutput];
-] 
-  
-(* Esempio di ciclo Do *)
-blockPt = List["65776f68202c","656761737520"];
-blockKey = List["0d0c0b0a0908","050403020100"];
-rounds = 28;
-Do[
-    Print["Indice j: ", j];
-    hexCounter = List[IntegerString[j, 16] ];
+RoundFunction[pt1_, pt2_, key_] := Module[{listOutput},
+    i1 = Interpreter["HexInteger"][pt1];
+    i2 = Interpreter["HexInteger"][pt2];
+    lenPt1 = StringLength[pt1]*4;
+    lenPt2 = StringLength[pt2]*4;
 
-    ret = RoundFunction[Take[blockPt, {1}], Take[blockPt,{2}], Take[blockKey, {2}] ];
-    retK = RoundFunction[ Take[blockKey, {1}], Take[blockKey, {2}], Take[hexCounter, {1}] ];
-    
-    Print["j in hexadecimal: ", hexCounter];
-    blockPt = ret;
-    blockKey = retK;
-    
-    Print["blockPt: ", blockPt];
-    Print["blockKey: ", blockKey];,
-    {j, 0, rounds-1}
-]
+    rotPt1 = RotateBitToTheRight[i1, 8, lenPt1];
+    sumInt = Mod[rotPt1 +i2, 2^lenPt1];
+    rotPt2 = RotateBitToTheLeft[i2, 3, lenPt2];
+    output1 = IntegerString[BitXor[sumInt, FromDigits[key, 16] ], 16, lenPt1/4];
+    output2 = IntegerString[BitXor[FromDigits[output1, 16], rotPt2], 16,lenPt1/4];
+    listOutput = List[output1, output2];
+
+    Return[listOutput];
+];
+
+(* Applies the same operations as RoundFunction but reversed, it's used in order to decrypt the ciphertext *)
+ClearAll[ReversedRoundFunction];
+ReversedRoundFunction[ct1_, ct2_, key_] := Module[{output},
+    i1 = Interpreter["HexInteger"][ct1];
+    i2 = Interpreter["HexInteger"][ct2];
+    lenCt1 = StringLength[ct1]*4;
+    lenCt2 = StringLength[ct2]*4;
+
+    y = BitXor[i1, i2];
+    pt2 = RotateBitToTheRight[y, 3, lenCt1];
+    x = BitXor[i1,FromDigits[key, 16] ];
+    modDiff = Mod[x - pt2, 2^lenCt1];
+    pt1 = RotateBitToTheLeft[modDiff, 8, lenCt1];
+    output = List[pt1, pt2];
+    hexOutput = Map[IntegerString[#, 16, lenCt1/4]&, output];
+
+    Return[hexOutput];
+];
