@@ -1,3 +1,5 @@
+(* Set the rounds number given the plaintext and key blocks *)
+ClearAll[SetRoundsNumber];
 SetRoundsNumber[block_, key_] := Module[{rounds},
     joinedBlock = StringJoin[block];
     joinedKey = StringJoin[key];
@@ -13,7 +15,34 @@ SetRoundsNumber[block_, key_] := Module[{rounds},
     If[StringLength[joinedBlock]*4== 128 && StringLength[joinedKey]*4==256, rounds = 34];
 
     Return[rounds];
-]
+];
+(* SpeckEncrypt function, given a plaintext, keySchedule, and rounds number, generates the ciphertext *)
+ClearAll[SpeckEncrypt];
+SpeckEncrypt[block_, keySchedule_, rounds_] := Module[{ciphertext},
+    tmp = block;
+    Do[     
+        ret = RoundFunction[tmp[[1]], tmp[[2]], keySchedule[[j+1]] ];
+        tmp = ret;
+        ,
+        {j, 0, rounds-1}
+    ];
+    
+    Return[ret]; 
+];
+(* SpeckDecrypt, given a ciphertext, keySchedule, and rounds number, generates the original plaintext *)
+ClearAll[SpeckDecrypt];
+SpeckDecrypt[block_, keySchedule_, rounds_] := Module[{plaintext},
+    keyScheduleReversed = Reverse[keySchedule];
+    tmp = block;
+    Do[
+        ret = ReversedRoundFunction[tmp[[1]], tmp[[2]], keyScheduleReversed[[i+1]]];
+        tmp = ret;
+        ,
+        {i, 0, rounds-1}
+    ];
+
+    Return[ret];
+];
 
 (* Test Vectors *)
 (* Speck 32/64 *)
