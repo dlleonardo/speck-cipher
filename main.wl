@@ -45,62 +45,127 @@ SpeckDecrypt[block_, keySchedule_, rounds_] := Module[{plaintext},
 ];
 
 (* Test Vectors *)
-(* Speck 32/64 *)
-block = List["6574","694c"];
-key = List["1918","1110","0908","0100"];
-rounds = SetRoundsNumber[block, key];
-Print["Rounds number of Speck 32/64: ", rounds];
-
 (* Speck 48/72 *)
-block2 = List["20796c", "6c6172"];
-key2 = List["121110","0a0908", "020100"];
-rounds = SetRoundsNumber[block2, key2];
-Print["Rounds number of Speck 48/72: ", rounds];
+Print["Test on Speck 48/72"];
+block = List["20796c", "6c6172"];
+key = List["121110","0a0908", "020100"];
+rounds = SetRoundsNumber[block, key];
+keySchedule = GenerateKeySchedule[key, rounds, Length[key] ];
+Print["keySchedule: ", keySchedule];
+
+ciphertext = SpeckEncrypt[block, keySchedule, rounds];
+Print["ciphertext: ", ciphertext];
+plaintext = SpeckDecrypt[ciphertext, keySchedule, rounds];
+Print["plaintext: ", plaintext ];
 
 (* Speck 48/96 *)
-block3 = List["6d2073","696874"];
-key3 = List["1a1918","121110","0a0908","020100"];
-rounds = SetRoundsNumber[block3, key3];
+Print["Test on Speck 48/96"];
+block = List["6d2073","696874"];
+key = List["1a1918","121110","0a0908","020100"];
+rounds = SetRoundsNumber[block, key];
 Print["Rounds number of Speck 48/96: ", rounds];
+keySchedule = GenerateKeySchedule[key, rounds, Length[key] ];
+Print["keySchedule: ", keySchedule];
+
+ciphertext = SpeckEncrypt[block, keySchedule, rounds];
+Print["ciphertext: ", ciphertext];
+plaintext = SpeckDecrypt[ciphertext, keySchedule, rounds];
+Print["plaintext: ", plaintext ];
 
 (* Speck 64/96 *)
-block4 = List["74614620","736e6165"];
-key4 = List["13121110","0b0a0908","03020100"];
-rounds = SetRoundsNumber[block4, key4];
+Print["Test on Speck 64/96"];
+block = List["74614620","736e6165"];
+key = List["13121110","0b0a0908","03020100"];
+rounds = SetRoundsNumber[block, key];
 Print["Rounds number of Speck 64/96: ", rounds];
+keySchedule = GenerateKeySchedule[key, rounds, Length[key] ];
+Print["keySchedule: ", keySchedule];
+
+ciphertext = SpeckEncrypt[block, keySchedule, rounds];
+Print["ciphertext: ", ciphertext];
+plaintext = SpeckDecrypt[ciphertext, keySchedule, rounds];
+Print["plaintext: ", plaintext ];
 
 (* Speck 64/128 *)
-block5 = List["3b726574","7475432d"];
-key5 = List["1b1a1918","13121110","0b0a0908","03020100"];
-rounds = SetRoundsNumber[block5, key5];
+Print["Test on Speck 64/128"];
+block = List["3b726574","7475432d"];
+key = List["1b1a1918","13121110","0b0a0908","03020100"];
+rounds = SetRoundsNumber[block, key];
 Print["Rounds number of Speck 64/128: ", rounds];
+keySchedule = GenerateKeySchedule[key, rounds, Length[key] ];
+Print["keySchedule: ", keySchedule];
+
+ciphertext = SpeckEncrypt[block, keySchedule, rounds];
+Print["ciphertext: ", ciphertext];
+plaintext = SpeckDecrypt[ciphertext, keySchedule, rounds];
+Print["plaintext: ", plaintext ];
 
 (* Speck 96/96 *)
-block6 = List["65776f68202c","656761737520"];
-key6 = List["0d0c0b0a0908","050403020100"];
-rounds = SetRoundsNumber[block6, key6];
+Print["Test on Speck 96/96"];
+block = List["65776f68202c","656761737520"];
+key = List["0d0c0b0a0908","050403020100"];
+rounds = SetRoundsNumber[block, key];
 Print["Rounds number of Speck 96/96: ", rounds];
+keySchedule = GenerateKeySchedule[key, rounds, Length[key] ];
+Print["keySchedule: ", keySchedule];
+
+ciphertext = SpeckEncrypt[block, keySchedule, rounds];
+Print["ciphertext: ", ciphertext];
+plaintext = SpeckDecrypt[ciphertext, keySchedule, rounds];
+Print["plaintext: ", plaintext ];
 
 (* Speck 96/144 *)
-block7 = List["656d6974206e","69202c726576"];
-key7 = List["151413121110","0d0c0b0a0908","050403020100"];
-rounds = SetRoundsNumber[block7, key7];
+Print["Test on Speck 96/144"];
+block = List["656d6974206e","69202c726576"];
+key = List["151413121110","0d0c0b0a0908","050403020100"];
+rounds = SetRoundsNumber[block, key];
 Print["Rounds number of Speck 96/144: ", rounds];
+keySchedule = GenerateKeySchedule[key, rounds, Length[key] ];
+Print["keySchedule: ", keySchedule];
+
+ciphertext = SpeckEncrypt[block, keySchedule, rounds];
+Print["ciphertext: ", ciphertext];
+plaintext = SpeckDecrypt[ciphertext, keySchedule, rounds];
+Print["plaintext: ", plaintext ];
 
 (* Speck 128/128 *)
-block8 = List["6c61766975716520","7469206564616d20"];
-key8 = List["0f0e0d0c0b0a0908","0706050403020100"];
-rounds = SetRoundsNumber[block8, key8];
+Print["Test on Speck 128/128"];
+block = List["6c61766975716520","7469206564616d20"];
+key = List["0f0e0d0c0b0a0908","0706050403020100"];
+rounds = SetRoundsNumber[block, key];
 Print["Rounds number of Speck 128/128: ", rounds];
+keySchedule = GenerateKeySchedule[key, rounds, Length[key] ];
+Print["keySchedule: ", keySchedule];
+
+ciphertext = SpeckEncrypt[block, keySchedule, rounds];
+Print["ciphertext: ", ciphertext];
+plaintext = SpeckDecrypt[ciphertext, keySchedule, rounds];
+Print["plaintext: ", plaintext ];
 
 (* Speck 128/192 *)
-block9 = List["7261482066656968","43206f7420746e65"];
-key9 = List["1716151413121110","0f0e0d0c0b0a0908","0706050403020100"];
-rounds = SetRoundsNumber[block9, key9];
+Print["Test on Speck 128/192"];
+block = List["7261482066656968","43206f7420746e65"];
+key = List["1716151413121110","0f0e0d0c0b0a0908","0706050403020100"];
+rounds = SetRoundsNumber[block, key];
 Print["Rounds number of Speck 128/192: ", rounds];
+keySchedule = GenerateKeySchedule[key, rounds, Length[key] ];
+Print["keySchedule: ", keySchedule];
+
+ciphertext = SpeckEncrypt[block, keySchedule, rounds];
+Print["ciphertext: ", ciphertext];
+plaintext = SpeckDecrypt[ciphertext, keySchedule, rounds];
+Print["plaintext: ", plaintext ];
 
 (* Speck 128/256 *)
-block10 = List["65736f6874206e49","202e72656e6f6f70"];
-key10 = List["1f1e1d1c1b1a1918","1716151413121110","0f0e0d0c0b0a0908","0706050403020100"];
-rounds = SetRoundsNumber[block10, key10];
+Print["Test on Speck 128/256"];
+block = List["65736f6874206e49","202e72656e6f6f70"];
+key = List["1f1e1d1c1b1a1918","1716151413121110","0f0e0d0c0b0a0908","0706050403020100"];
+rounds = SetRoundsNumber[block, key];
 Print["Rounds number of Speck 128/256: ", rounds];
+keySchedule = GenerateKeySchedule[key, rounds, Length[key] ];
+Print["keySchedule: ", keySchedule];
+
+ciphertext = SpeckEncrypt[block, keySchedule, rounds];
+Print["ciphertext: ", ciphertext];
+plaintext = SpeckDecrypt[ciphertext, keySchedule, rounds];
+Print["plaintext: ", plaintext ];
