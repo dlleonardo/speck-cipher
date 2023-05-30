@@ -27,10 +27,9 @@ GenerateKeySchedule[key_List, rounds_Integer, numKeyWords_Integer] := Module[{ou
 
     j = 0;
     Do[
-        tmp[[i]] = BitXor[ Mod[ RotateBitToTheRight[tmp[[i]], 8, bitSize] + keySchedule[[i]], 2^bitSize ], j ];
-        y = BitXor[ RotateBitToTheLeft[keySchedule[[i]], 3, bitSize], tmp[[i]]];
-        tmp[[i + numKeyWords - 1]] = tmp[[i]];
-        keySchedule[[i+1]] = y;
+        roundOut = RoundFunction[IntegerString[tmp[[i]], 16, wordSize], IntegerString[keySchedule[[i]], 16, wordSize], IntegerString[j, 16, wordSize] ];
+        tmp[[i + numKeyWords - 1]] = FromDigits[roundOut[[1]], 16];
+        keySchedule[[i+1]] = FromDigits[roundOut[[2]], 16];
         j = j + 1;
         ,
         {i, 1, rounds-1}

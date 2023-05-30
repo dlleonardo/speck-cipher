@@ -45,6 +45,19 @@ SpeckDecrypt[block_, keySchedule_, rounds_] := Module[{plaintext},
 ];
 
 (* Test Vectors *)
+(* Speck 32/64 *)
+Print["Test on Speck 32/64"];
+block = List["6574", "694c"];
+key = List["1918","1110", "0908", "0100"];
+rounds = SetRoundsNumber[block, key];
+keySchedule = GenerateKeySchedule[key, rounds, Length[key] ];
+Print["keySchedule: ", keySchedule];
+
+ciphertext = SpeckEncrypt[block, keySchedule, rounds];
+Print["ciphertext: ", ciphertext];
+plaintext = SpeckDecrypt[ciphertext, keySchedule, rounds];
+Print["plaintext: ", plaintext ];
+
 (* Speck 48/72 *)
 Print["Test on Speck 48/72"];
 block = List["20796c", "6c6172"];

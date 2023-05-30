@@ -14,9 +14,14 @@ RoundFunction[pt1_, pt2_, key_] := Module[{listOutput},
     lenPt1 = StringLength[pt1]*4;
     lenPt2 = StringLength[pt2]*4;
 
-    rotPt1 = RotateBitToTheRight[i1, 8, lenPt1];
+    If[lenPt1 == 16,
+        numBitsRightToRotate = 7; numBitsLeftToRotate = 2,
+        numBitsRightToRotate = 8; numBitsLeftToRotate = 3
+    ];
+
+    rotPt1 = RotateBitToTheRight[i1, numBitsRightToRotate, lenPt1];
     sumInt = Mod[rotPt1 +i2, 2^lenPt1];
-    rotPt2 = RotateBitToTheLeft[i2, 3, lenPt2];
+    rotPt2 = RotateBitToTheLeft[i2, numBitsLeftToRotate, lenPt2];
     output1 = IntegerString[BitXor[sumInt, FromDigits[key, 16] ], 16, lenPt1/4];
     output2 = IntegerString[BitXor[FromDigits[output1, 16], rotPt2], 16,lenPt1/4];
     listOutput = List[output1, output2];
@@ -32,11 +37,16 @@ ReversedRoundFunction[ct1_, ct2_, key_] := Module[{output},
     lenCt1 = StringLength[ct1]*4;
     lenCt2 = StringLength[ct2]*4;
 
+    If[lenCt1 == 16,
+        numBitsRightToRotate = 2; numBitsLeftToRotate = 7,
+        numBitsRightToRotate = 3; numBitsLeftToRotate = 8
+    ];
+
     y = BitXor[i1, i2];
-    pt2 = RotateBitToTheRight[y, 3, lenCt1];
+    pt2 = RotateBitToTheRight[y, numBitsRightToRotate, lenCt1];
     x = BitXor[i1,FromDigits[key, 16] ];
     modDiff = Mod[x - pt2, 2^lenCt1];
-    pt1 = RotateBitToTheLeft[modDiff, 8, lenCt1];
+    pt1 = RotateBitToTheLeft[modDiff, numBitsLeftToRotate, lenCt1];
     output = List[pt1, pt2];
     hexOutput = Map[IntegerString[#, 16, lenCt1/4]&, output];
 
